@@ -11,6 +11,8 @@ import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const Auth = () => {
   const [searchParams] = useSearchParams();
@@ -22,6 +24,7 @@ const Auth = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   const { login, signup, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -35,6 +38,7 @@ const Auth = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setAuthError(null);
     setLoading(true);
     
     try {
@@ -48,9 +52,9 @@ const Auth = () => {
       }
       
       await login(email, password);
-      navigate('/dashboard');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Login error:', error);
+      setAuthError(error?.message || "An error occurred during login");
     } finally {
       setLoading(false);
     }
@@ -58,6 +62,7 @@ const Auth = () => {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    setAuthError(null);
     setLoading(true);
     
     try {
@@ -80,9 +85,9 @@ const Auth = () => {
       }
       
       await signup(name, email, password);
-      navigate('/dashboard');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Signup error:', error);
+      setAuthError(error?.message || "An error occurred during signup");
     } finally {
       setLoading(false);
     }
@@ -114,6 +119,13 @@ const Auth = () => {
             </CardHeader>
             
             <CardContent>
+              {authError && (
+                <Alert variant="destructive" className="mb-4">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{authError}</AlertDescription>
+                </Alert>
+              )}
+              
               {activeTab === 'login' ? (
                 <form onSubmit={handleLogin}>
                   <div className="space-y-4">
