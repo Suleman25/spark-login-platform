@@ -25,6 +25,17 @@ const DashboardNavbar = () => {
     logout();
   };
 
+  // Get user display name or first letter for the avatar
+  const getUserInitial = () => {
+    if (user?.user_metadata?.name) {
+      return user.user_metadata.name[0].toUpperCase();
+    }
+    if (user?.email) {
+      return user.email[0].toUpperCase();
+    }
+    return 'U';
+  };
+
   return (
     <nav className="bg-white border-b border-gray-200 py-3 px-6">
       <div className="container mx-auto flex justify-between items-center">
@@ -49,7 +60,7 @@ const DashboardNavbar = () => {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                 <div className="h-9 w-9 rounded-full bg-primary flex items-center justify-center text-white">
-                  {user?.name?.[0]?.toUpperCase() || 'U'}
+                  {getUserInitial()}
                 </div>
               </Button>
             </DropdownMenuTrigger>
@@ -79,7 +90,7 @@ const DashboardNavbar = () => {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-9 w-9 p-0 mr-2 rounded-full">
                 <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-white">
-                  {user?.name?.[0]?.toUpperCase() || 'U'}
+                  {getUserInitial()}
                 </div>
               </Button>
             </DropdownMenuTrigger>

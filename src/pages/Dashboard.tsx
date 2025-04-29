@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import DashboardNavbar from '@/components/DashboardNavbar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -43,6 +44,9 @@ const Dashboard = () => {
     document.title = "Dashboard | Spark";
   }, []);
 
+  // Get user display name from metadata
+  const displayName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'User';
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <DashboardNavbar />
@@ -51,7 +55,7 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto">
           {/* Welcome section */}
           <div className="mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Welcome back, {user?.name || 'User'}!</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Welcome back, {displayName}!</h1>
             <p className="text-gray-600 mt-2">Here's what's happening with your platform today.</p>
           </div>
           
