@@ -84,6 +84,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           data: {
             name,
           },
+          // Set emailRedirectTo to the auth URL so user comes back to login page
+          emailRedirectTo: `${window.location.origin}/auth`,
         },
       });
       
@@ -96,9 +98,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw error;
       }
       
+      // Clear any session that might have been created
+      await supabase.auth.signOut();
+      
       toast({
         title: "Account created!",
-        description: "Please check your email to confirm your account.",
+        description: "Please log in with your new account credentials.",
       });
       
     } catch (error) {

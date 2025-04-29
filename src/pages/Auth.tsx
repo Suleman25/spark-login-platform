@@ -11,7 +11,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const Auth = () => {
@@ -25,6 +25,7 @@ const Auth = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [signupSuccess, setSignupSuccess] = useState(false);
 
   const { login, signup, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -63,6 +64,7 @@ const Auth = () => {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError(null);
+    setSignupSuccess(false);
     setLoading(true);
     
     try {
@@ -85,6 +87,14 @@ const Auth = () => {
       }
       
       await signup(name, email, password);
+      // Clear form fields
+      setName('');
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      // Set success state and switch to login tab
+      setSignupSuccess(true);
+      setActiveTab('login');
     } catch (error: any) {
       console.error('Signup error:', error);
       setAuthError(error?.message || "An error occurred during signup");
@@ -123,6 +133,13 @@ const Auth = () => {
                 <Alert variant="destructive" className="mb-4">
                   <AlertCircle className="h-4 w-4" />
                   <AlertDescription>{authError}</AlertDescription>
+                </Alert>
+              )}
+              
+              {signupSuccess && activeTab === 'login' && (
+                <Alert className="mb-4 bg-green-50 text-green-800 border-green-200">
+                  <CheckCircle2 className="h-4 w-4 text-green-600" />
+                  <AlertDescription>Account created successfully! Please log in with your credentials.</AlertDescription>
                 </Alert>
               )}
               
